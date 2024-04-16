@@ -7,6 +7,9 @@ import javafx.scene.control.ToggleButton;
 
 public class HomeController {
 
+
+    public static Integer id;
+
     public ToggleButton tbNight;
     public ProgressIndicator piProgress;
     public Slider slSlider;

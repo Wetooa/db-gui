@@ -1,5 +1,6 @@
 package com.example.csit228_f1_v2;
 
+import com.example.csit228_f1_v2.queries.auth.LoginQuery;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,19 +26,13 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-//        stage.setTitle("Hello!");
-//        stage.setScene(scene);
-
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(20));
+
         Text txtWelcome = new Text("Welcome to CIT");
         txtWelcome.setFont(Font.font("Chiller", FontWeight.EXTRA_BOLD, 69));
         txtWelcome.setFill(Color.RED);
-//        grid.setAlignment();
-        grid.setPadding(new Insets(20));
-//        grid.
         txtWelcome.setTextAlignment(TextAlignment.CENTER);
         grid.add(txtWelcome, 0, 0, 3, 1);
 
@@ -47,9 +42,8 @@ public class HelloApplication extends Application {
         grid.add(lbUsername, 0, 1);
 
         TextField tfUsername = new TextField();
-        grid.add(tfUsername, 1, 1);
         tfUsername.setFont(Font.font(30));
-//        tfUsername.setMaxWidth(150);
+        grid.add(tfUsername, 1, 1);
 
         Label lbPassword = new Label("Password");
         lbPassword.setFont(Font.font(30));
@@ -62,22 +56,11 @@ public class HelloApplication extends Application {
 
         TextField tmpPassword = new TextField(pfPassword.getText());
         tmpPassword.setFont(Font.font(30));
-        grid.add(tmpPassword, 1, 2);
         tmpPassword.setVisible(false);
+        grid.add(tmpPassword, 1, 2);
 
         ToggleButton btnShow = new ToggleButton("( )");
-//        btnShow.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent actionEvent) {
-//                if (btnShow.isSelected()) {
-//                    tmpPassword.setText(pfPassword.getText());
-//                    tmpPassword.setVisible(true);
-//                } else {
-//                    tmpPassword.setVisible(false);
-//                    pfPassword.setText(tmpPassword.getText());
-//                }
-//            }
-//        });
+
         btnShow.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -96,7 +79,7 @@ public class HelloApplication extends Application {
 
         btnShow.setOnMouseReleased(release);
         btnShow.setOnMouseExited(release);
-        grid.add(btnShow, 2,2);
+        grid.add(btnShow, 2, 2);
 
         Button btnLogin = new Button("Log In");
         btnLogin.setFont(Font.font(40));
@@ -105,12 +88,21 @@ public class HelloApplication extends Application {
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("Hello");
+
+                Integer id = LoginQuery.POST(pfPassword.getText(), tfUsername.getText());
+
+                // TODO: do something here
+                if (id == null) {
+                    System.out.println("Invalid credentials!");
+                    return;
+                }
+
                 try {
-                    Parent p = FXMLLoader.load(getClass().getResource("homepage.fxml"));
+                    Parent p = FXMLLoader.load(getClass().getResource("homepage-view.fxml"));
                     Scene s = new Scene(p);
                     stage.setScene(s);
                     stage.show();
+                    HomeController.id = id;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -121,6 +113,7 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         scene.setFill(Color.CORNFLOWERBLUE);
         stage.show();
+
         txtWelcome.minWidth(grid.getWidth());
     }
 
