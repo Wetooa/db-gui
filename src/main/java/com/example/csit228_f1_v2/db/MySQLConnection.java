@@ -10,15 +10,12 @@ public class MySQLConnection {
     public static final String USER = "root";
     public static final String PASS = "";
 
-
     public static Connection getConnection() {
-
         Connection c = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             c = DriverManager.getConnection(URL, USER, PASS);
-        System.out.println("DB Connection Success");
-
+            System.out.println("DB Connection Success");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -29,7 +26,6 @@ public class MySQLConnection {
 
     public static void main(String[] args) {
         Connection c = MySQLConnection.getConnection();
-
 
         try {
             c.close();

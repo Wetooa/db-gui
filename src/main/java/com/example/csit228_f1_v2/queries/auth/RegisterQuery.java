@@ -9,26 +9,25 @@ import java.sql.SQLException;
 
 public class RegisterQuery {
 
-    public static Integer POST(String username, String password) {
-
+    public static Integer POST(String username, String password) throws Exception {
+        Integer count = 0;
 
         try (Connection c = MySQLConnection.getConnection();
-             PreparedStatement statement = c.prepareStatement("INSERT INTO user (username, password) VALUES (?,?)");){
+
+             PreparedStatement statement = c.prepareStatement("INSERT INTO user (username, password) VALUES (?,?)");) {
 
             statement.setString(1, username);
             statement.setString(2, password);
 
-            ResultSet res = statement.executeQuery();
+            count = statement.executeUpdate();
+            if (count == 0) throw new Exception("No rows were added! An exception occurred!");
 
-            System.out.println("User registered successfully!");
-            Integer id = res.getInt("id");
-
-            return id;
-
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
 
-        return null;
+        return count;
     }
 }

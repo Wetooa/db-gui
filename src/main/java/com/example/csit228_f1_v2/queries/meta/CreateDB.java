@@ -6,44 +6,50 @@ import com.example.csit228_f1_v2.db.MySQLConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateDB {
-    public static void main(String[] args) {
+    public static void createDB() {
         Connection c = MySQLConnection.getConnection();
-        StringBuilder sb = new StringBuilder();
+        List<String> queries = new ArrayList<>();
 
-//        sb.append(
-//                "CREATE TABLE IF NOT EXISTS user (" +
-//                        "id INT PRIMARY KEY AUTO_INCREMENT," +
-//                        "username TEXT NOT NULL," +
-//                        "password TEXT NOT NULL" +
-//                        ");"
-//        );
+        queries.add(
+                "CREATE TABLE IF NOT EXISTS user (" +
+                        "id INT PRIMARY KEY AUTO_INCREMENT," +
+                        "username TEXT NOT NULL UNIQUE," +
+                        "password TEXT NOT NULL" +
+                        ");"
+        );
 
-//        sb.append(
-//                "CREATE TABLE IF NOT EXISTS product (" +
-//                        "id INT PRIMARY KEY AUTO_INCREMENT," +
-//
-//                        "sellerId INT," +
-//
-//                        "name TEXT NOT NULL," +
-//                        "description TEXT," +
-//                        "quantity INT DEFAULT 0" +
-//                        ");"
-//        );
+        queries.add(
+                "CREATE TABLE IF NOT EXISTS post (" +
+                        "id INT PRIMARY KEY AUTO_INCREMENT," +
 
-//        sb.append(
-//                "ALTER TABLE product " +
-//                        "ADD CONSTRAINT FK_sellerId FOREIGN KEY(sellerId) " +
-//                        "REFERENCES user(id);"
-//        );
+                        "posterId INT," +
 
+                        "message TEXT NOT NULL," +
+
+                        "createdAt DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                        "updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+                        ");"
+        );
+
+        queries.add(
+                "ALTER TABLE post " +
+                        "ADD CONSTRAINT FK_posterId FOREIGN KEY(posterId) " +
+                        "REFERENCES user(id) " +
+                        "ON DELETE CASCADE;"
+        );
 
         try {
             Statement statement = c.createStatement();
-            statement.execute(sb.toString());
-            System.out.println("Tables created successfully");
 
+            for (String query : queries) {
+                statement.execute(query);
+            }
+
+            System.out.println("Tables created successfully");
 
         } catch (SQLException e) {
             e.printStackTrace();
